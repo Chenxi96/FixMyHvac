@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <div>
+        <% quotes.forEach(quote => { %>
+            <p><%= quote.name %></p>
+            <p><%= quote.description %></p>
+            <% quote.images.map(image => { %>
+                <img src="<%= image.url%>" height="150" width="150" >
+            <%}) %>
+            <form action="/getImage" method="post" >
+                <input type="text" value="<%= quote._id %>" name="_id" readonly>
+                <input type="submit" value="Select">
+            </form>
+        <% }) %>
+    </div>
+</body>
+</html>
