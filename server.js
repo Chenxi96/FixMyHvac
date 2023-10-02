@@ -1,10 +1,12 @@
 const express= require('express');
 const app = express();
 const multer = require('multer');
+const cors = require('cors');
 const upload = multer();
 const https = require('https');
 const fs = require('fs');
 const path = require('path');
+const { auth } = require('express-oauth2-jwt-bearer');
 const zip = require('express-easy-zip');
 const mongoose = require('mongoose');
 const Address = require('./address');
@@ -15,11 +17,20 @@ app.use(express.urlencoded({ extended: true }))
 app.set('view engine', 'ejs')
 app.use(express.static('images'))
 app.use(zip())
+app.use(cors({
+    origin: 'https://fix-my-hvac-front.vercel.app',
+    'Access-Control-Allow-Origin': 'https://fix-my-hvac.onrender.com'
+}))
+app.use(auth({
+  audience: 'https://fix-my-hvac.onrender.com',
+  issuerBaseURL: process.env.ISSUER_BASE_URL,
+  tokenSigningAlg: 'RS256'
+}))
 
 /* connect to database */
 const connectMongoose = async() => {
     await mongoose.connect(process.env.MONGO_URL, {dbName: process.env.DB_NAME})
-        .then(console.log('connected'))
+    .then(console.log('connected'))
 }
 
 connectMongoose()
@@ -36,7 +47,7 @@ var imagekit = new ImageKit({
 
 
 app.get('/', (req, res) => {
-    res.render('quote')
+    res.json('hello')
 });
 
 app.post('/address', upload.array('images', 8), async(req, res) => {
@@ -108,7 +119,7 @@ app.post('/address', upload.array('images', 8), async(req, res) => {
     } else {
         console.log('could not save quote')
     }
-    res.render('address')
+    res.status(200).end()
 });
 
 
@@ -116,7 +127,7 @@ app.post('/address', upload.array('images', 8), async(req, res) => {
 
 app.get('/getAllImage', async(req, res) => {
     const allQuotes = await Quotes.find({});
-    res.render('display', {quotes: allQuotes})
+    res.json(allQuotes)
 })
 
 app.post('/getImage',async(req, res) => {
@@ -161,4 +172,4 @@ app.get('/download', (req, res) => {
 //     res.end()
 // })
 
-app.listen(3000)
+app.listen(4000)
