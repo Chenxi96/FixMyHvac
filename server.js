@@ -51,6 +51,7 @@ app.get('/', (req, res) => {
 });
 
 app.post('/address', upload.array('images', 8), async(req, res) => {
+    console.log('receive request')
     const findOneAddress = await Address.findOne({address: req.body.address});
     const findOneQuote = await Quotes.findOne({name: req.body.name});
     const address = new Address({});
@@ -126,6 +127,7 @@ app.post('/address', upload.array('images', 8), async(req, res) => {
 
 
 app.get('/getAllImage', async(req, res) => {
+    console.log('recieved requedst for all Images')
     const allQuotes = await Quotes.find({});
     res.json(allQuotes)
 })
@@ -172,4 +174,4 @@ app.get('/download', (req, res) => {
 //     res.end()
 // })
 
-app.listen(4000)
+app.listen(process.env.PORT)
