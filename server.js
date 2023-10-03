@@ -18,7 +18,7 @@ app.set('view engine', 'ejs')
 app.use(express.static('images'))
 app.use(zip())
 app.use(cors({
-    origin: 'https://fix-my-hvac-front.vercel.app',
+    origin: '*',
     'Access-Control-Allow-Origin': 'https://fix-my-hvac.onrender.com'
 }))
 app.use(auth({
