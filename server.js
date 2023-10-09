@@ -21,11 +21,7 @@ app.use(cors({
     origin: '*',
     'Access-Control-Allow-Origin': 'https://fix-my-hvac.onrender.com'
 }))
-app.use(auth({
-  audience: 'https://fix-my-hvac.onrender.com',
-  issuerBaseURL: process.env.ISSUER_BASE_URL,
-  tokenSigningAlg: 'RS256'
-}))
+
 
 /* connect to database */
 const connectMongoose = async() => {
@@ -47,6 +43,8 @@ var imagekit = new ImageKit({
 
 
 app.get('/', (req, res) => {
+    console.log(req.body)
+    console.log(req.file)
     res.json('hello')
 });
 
@@ -60,7 +58,8 @@ app.post('/address', upload.array('images', 8), async(req, res) => {
         req.files.map(file => {
             imagekit.upload({
                 file: file.buffer.toString('base64'),
-                fileName: file.originalname
+                fileName: file.originalname,
+                folder: '/Quote_images'
             }, async function(err, result) {
                 if(err) {
                     return err
@@ -90,7 +89,8 @@ app.post('/address', upload.array('images', 8), async(req, res) => {
         req.files.map(file => {
             imagekit.upload({
                 file: file.buffer.toString('base64'),
-                fileName: file.originalname
+                fileName: file.originalname,
+                folder: '/Quote_Images'
             }, async function(err, result) {
                 if(err) {
                     return err
